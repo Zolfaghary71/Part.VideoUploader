@@ -10,4 +10,8 @@
       <ProjectReference Include="..\Part.VideoUploader.Service\Part.VideoUploader.Service.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <PackageReference Include="Minio" Version="6.0.1" />
+    </ItemGroup>
+
 </Project>

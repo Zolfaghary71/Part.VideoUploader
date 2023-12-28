@@ -10,7 +10,7 @@ namespace Part.VideoUploader.Test.UnitTests;
 public class StorageServiceTests
 {
     [Fact]
-    public async Task SaveToStorage()
+    public async void SaveToStorage()
     {
         var storageService = new Mock<IStorageService>();
         var fileName = "file.mp4";
