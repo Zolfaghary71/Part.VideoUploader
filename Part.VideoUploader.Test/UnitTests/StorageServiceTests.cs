@@ -1,4 +1,6 @@
 ﻿using Moq;
+using Part.VideoUploader.Infrastructure.Storage;
+using Part.VideoUploader.Service.Contracts.Infrastructure;
 using Xunit;
 
 namespace Part.VideoUploader.Test.UnitTests;
@@ -8,14 +10,15 @@ public class StorageServiceTests
     [Fact]
     public async Task SaveToStorage()
     {
-        var mockMinioClient = new Mock<IStorageWrapper>();
-        var service = new StorageService(mockMinioClient.Object, "mybucket");
+        var mockMinioClient = new Mock<IStorageService>();
 
-        string testFilePath = "testfile.mp4";
-        string expectedObjectName = "testfile.mp4"; 
+        var handler = new UploadFileCommandHandler(mockStorageService.Object);
+        var command = new UploadFileCommand("/path/to/file.mp4", "file.mp4");
 
-        await service.UploadFileAsync(testFilePath, expectedObjectName);
+        // Act
+        await handler.Handle(command, new CancellationToken());
 
-        mockMinioClient.Verify(client => client.PutObjectAsync("mybucket", expectedObjectName, testFilePath, "video/mp4"), Times.Once());
+        // Assert
+        mockStorageService.Verify(s => s.UploadFileAsync("/path/to/file.mp4", "file.mp4"), Times.Once);
     }
 }
