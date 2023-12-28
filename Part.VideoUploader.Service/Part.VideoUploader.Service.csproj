@@ -10,4 +10,9 @@
       <ProjectReference Include="..\Part.VideoUploader.Domain\Part.VideoUploader.Domain.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <PackageReference Include="AutoMapper" Version="12.0.1" />
+      <PackageReference Include="MediatR" Version="12.2.0" />
+    </ItemGroup>
+
 </Project>
