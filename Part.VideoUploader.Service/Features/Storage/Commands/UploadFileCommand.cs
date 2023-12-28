@@ -1,6 +1,8 @@
-﻿namespace Part.VideoUploader.Service.Features.Storage.Commands;
+﻿using MediatR;
 
-public class UploadFileCommand
+namespace Part.VideoUploader.Service.Features.Storage.Commands;
+
+public class UploadFileCommand:IRequest<UploadFileCommandResponse>
 {
     public string FilePath { get; set; }
     public string NameAfterUpload { get; set; }
