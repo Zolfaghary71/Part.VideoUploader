@@ -14,6 +14,6 @@ public class UploadFileCommand:IRequest<UploadFileCommandResponse>
         FilePath = filePath;
         FileName = fileName;
         NameAfterUpload = fileName;
-        BucketName = "Default";
+        BucketName = "DefaultBucket";
     }
 }
