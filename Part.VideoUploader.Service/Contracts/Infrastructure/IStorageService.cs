@@ -2,5 +2,5 @@
 
 public interface IStorageService
 {
-   Task PutObjectAsync(string bucketName, string nameAfterUpload, string localFilePath, string objectName);
+   Task UploadAsync(string bucketName, string nameAfterUpload, string localFilePath, string objectName);
 }

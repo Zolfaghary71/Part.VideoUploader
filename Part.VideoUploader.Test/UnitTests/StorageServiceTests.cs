@@ -1,4 +1,5 @@
-﻿using Moq;
+﻿using Microsoft.Extensions.Logging;
+using Moq;
 using Part.VideoUploader.Infrastructure.Storage;
 using Part.VideoUploader.Service.Contracts.Infrastructure;
 using Part.VideoUploader.Service.Features.Storage.Commands;
@@ -11,15 +12,15 @@ public class StorageServiceTests
     [Fact]
     public async Task SaveToStorage()
     {
-        var mockMinioClient = new Mock<IStorageService>();
+        var storageService = new Mock<IStorageService>();
+        var fileName = "file.mp4";
+        var filePath = "/path/to/file.mp4";
+        var bucketName = "DefaultBucket";
+        var handler = new UploadFileCommandHandler(storageService.Object, new Mock<ILogger<UploadFileCommandHandler>>().Object);
+        var command = new UploadFileCommand(filePath, fileName);
 
-        var handler = new UploadFileCommandHandler(mockStorageService.Object);
-        var command = new UploadFileCommand("/path/to/file.mp4", "file.mp4");
-
-        // Act
         await handler.Handle(command, new CancellationToken());
 
-        // Assert
-        mockStorageService.Verify(s => s.UploadFileAsync("/path/to/file.mp4", "file.mp4"), Times.Once);
+        storageService.Verify(s => s.UploadAsync(bucketName, fileName,filePath,fileName), Times.Once);
     }
 }
