@@ -6,4 +6,8 @@
         <Nullable>enable</Nullable>
     </PropertyGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\Part.VideoUploader.Domain\Part.VideoUploader.Domain.csproj" />
+    </ItemGroup>
+
 </Project>
