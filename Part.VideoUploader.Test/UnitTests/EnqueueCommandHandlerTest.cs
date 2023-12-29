@@ -11,9 +11,9 @@ namespace Part.VideoUploader.Test.UnitTests;
 public class EnqueueCommandHandlerTest
 {
     [Fact]
-    public async void EnqueueCommandHandlerTest_ShouldEndqueue()
+    public async Task EnqueueCommandHandlerTest_ShouldEndqueue()
     {
-        var video = new VideoFile()
+        var video = new EnqueueVideoUploadCommand()
         {
             Id = Guid.NewGuid(),
             Name = "videoName",
@@ -22,13 +22,10 @@ public class EnqueueCommandHandlerTest
             DateCreated = DateTime.Now
         };
 
-        var redisRepo = new Mock<IRedisRepository<VideoFile>>();
-
-        var commandHandler = new EnqueueVideoUploadCommand();
-        redisRepo.Setup(r => r.Set(video.Id,video)).ReturnsAsync(true);
-        
-        redisRepo.Verify(s => s.Set(video.Id,video), Times.Once);
-
-
+        var queue = new Mock<IQueue<EnqueueVideoUploadCommand>>();
+        queue.Setup(q => q.EnqueueAsync(video)).Returns(Task.CompletedTask);
+        var commandHandler = new EnqueueVideoUploadCommandHandler(queue.Object);
+       await commandHandler.Handle(video,new CancellationToken());
+       queue.Verify(s => s.EnqueueAsync(video), Times.Once);
     }
 }

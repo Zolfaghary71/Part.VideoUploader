@@ -1,6 +1,8 @@
-﻿namespace Part.VideoUploader.Service.Features.UploadQueue.Command;
+﻿using MediatR;
 
-public class EnqueueVideoUploadCommand
+namespace Part.VideoUploader.Service.Features.UploadQueue.Command;
+
+public class EnqueueVideoUploadCommand: IRequest<bool>
 {
     public Guid Id { get; set; }
     public string Name { get; set; }
