@@ -3,5 +3,5 @@
 public interface IQueue<T>
 {
     Task EnqueueAsync(T item);
-    Task<T> DequeueAsync();
+    Task<T?> DequeueAsync();
 }
