@@ -3,6 +3,6 @@
 public interface IRedisRepository<T>
 {
     public Task<T> Get(Guid id);
-    public Task<bool> Set(T @object);
-    public Task<bool> Delete(string id);
+    public Task<bool> Set(Guid id, T @object);
+    public Task<bool> Delete(Guid id);
 }

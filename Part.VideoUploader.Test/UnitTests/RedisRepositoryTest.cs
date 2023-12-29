@@ -1,59 +1,60 @@
-﻿using Moq;
-using Xunit;
+﻿using Xunit;
+using Moq;
 using Microsoft.Extensions.Caching.Distributed;
-using Part.VideoUploader.Domain;
+using System.Threading.Tasks;
 using Part.VideoUploader.Infrastructure.Redis;
+using System;
 using System.Text.Json;
-
-namespace Part.VideoUploader.Test.UnitTests;
 
 public class RedisRepositoryTests
 {
-    [Fact]
-    public async Task Set_ShouldCacheVideoFile()
+    private class SampleEntity
     {
-        var mockCache = new Mock<IDistributedCache>();
-        var repository = new RedisRepository(mockCache.Object);
-        var videoFile = new VideoFile { Id = Guid.NewGuid()};
-
-        await repository.Set(videoFile);
-
-        mockCache.Verify(cache => cache.SetAsync(
-            videoFile.Id.ToString(), 
-            It.IsAny<byte[]>(), 
-            It.IsAny<DistributedCacheEntryOptions>(),
-            It.IsAny<System.Threading.CancellationToken>()), 
-            Times.Once);
+        public Guid Id { get; set; }
     }
 
     [Fact]
-    public async Task Get_ShouldReturnVideoFile()
+    public async Task Get_WhenCalled_ReturnsEntity()
     {
-        var videoFile = new VideoFile { Id = Guid.NewGuid()};
+        var sampleEntity = new SampleEntity { Id = Guid.NewGuid() };
+        var serializedEntity = JsonSerializer.SerializeToUtf8Bytes(sampleEntity);
         var mockCache = new Mock<IDistributedCache>();
-        var serializedVideoFile = JsonSerializer.SerializeToUtf8Bytes(videoFile);
-        mockCache.Setup(m => m.GetAsync(videoFile.Id.ToString(), default))
-                 .ReturnsAsync(serializedVideoFile);
+        mockCache.Setup(x => x.GetAsync(sampleEntity.Id.ToString(), default))
+                 .ReturnsAsync(serializedEntity);
 
-        var repository = new RedisRepository(mockCache.Object);
+        var repository = new RedisRepository<SampleEntity>(mockCache.Object);
 
-        var result = await repository.Get(videoFile.Id);
+        var result = await repository.Get(sampleEntity.Id);
 
-        Assert.Equal(videoFile.Id, result.Id);
+        Assert.NotNull(result);
+        Assert.Equal(sampleEntity.Id, result.Id);
     }
 
     [Fact]
-    public async Task Delete_ShouldRemoveVideoFile()
+    public async Task Set_WhenCalled_SavesEntity()
     {
-        var videoFileId = Guid.NewGuid().ToString();
+        var sampleEntity = new SampleEntity { Id = Guid.NewGuid() };
         var mockCache = new Mock<IDistributedCache>();
-        var repository = new RedisRepository(mockCache.Object);
+        var repository = new RedisRepository<SampleEntity>(mockCache.Object);
 
-        await repository.Delete(videoFileId);
+        await repository.Set(sampleEntity.Id, sampleEntity);
 
-        mockCache.Verify(cache => cache.RemoveAsync(
-            videoFileId, 
-            It.IsAny<System.Threading.CancellationToken>()),
-            Times.Once);
+        mockCache.Verify(x => x.SetAsync(sampleEntity.Id.ToString(), 
+                                         It.IsAny<byte[]>(), 
+                                         It.IsAny<DistributedCacheEntryOptions>(), 
+                                         default), 
+                                         Times.Once);
+    }
+
+    [Fact]
+    public async Task Delete_WhenCalled_RemovesEntity()
+    {
+        var entityId = Guid.NewGuid();
+        var mockCache = new Mock<IDistributedCache>();
+        var repository = new RedisRepository<SampleEntity>(mockCache.Object);
+
+        await repository.Delete(entityId);
+
+        mockCache.Verify(x => x.RemoveAsync(entityId.ToString(), default), Times.Once);
     }
 }
