@@ -23,7 +23,7 @@ public class EnqueueCommandHandlerTest
 
         var redisRepo = new Mock<IRedisRepository<VideoFile>>();
 
-        var commandHandler = new EnqueueCommandHandler();
+        var commandHandler = new EnqueueVideoUploadCommand();
         redisRepo.Setup(r => r.Set(video.Id,video)).ReturnsAsync(true);
         
         redisRepo.Verify(s => s.Set(video.Id,video), Times.Once);

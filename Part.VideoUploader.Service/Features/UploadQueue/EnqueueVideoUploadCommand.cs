@@ -1,6 +1,6 @@
 ﻿namespace Part.VideoUploader.Service.Features.UploadQueue;
 
-public class EnqueueCommandHandler
+public class EnqueueVideoUploadCommand
 {
     public Guid Id { get; set; }
     public string Name { get; set; }
