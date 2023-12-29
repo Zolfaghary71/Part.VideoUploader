@@ -16,7 +16,6 @@ public class MinIoTests
 
         string testFilePath = "path/to/local/testvideo.mp4"; 
         string objectName = "testvideo.mp4";
-        string contentType = "video/mp4"; 
 
         await service.UploadAsync(bucketName, objectName, testFilePath,objectName);
 

@@ -15,7 +15,7 @@ public class StorageServiceTests
         var storageService = new Mock<IStorageService>();
         var fileName = "file.mp4";
         var filePath = "/path/to/file.mp4";
-        var bucketName = "DefaultBucket";
+        var bucketName = "defaultbucket";
         var handler = new UploadFileCommandHandler(storageService.Object, new Mock<ILogger<UploadFileCommandHandler>>().Object);
         var command = new UploadFileCommand(filePath, fileName);
 
