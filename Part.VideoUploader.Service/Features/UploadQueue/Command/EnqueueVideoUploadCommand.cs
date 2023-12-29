@@ -1,4 +1,4 @@
-﻿namespace Part.VideoUploader.Service.Features.UploadQueue;
+﻿namespace Part.VideoUploader.Service.Features.UploadQueue.Command;
 
 public class EnqueueVideoUploadCommand
 {

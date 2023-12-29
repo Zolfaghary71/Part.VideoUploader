@@ -3,6 +3,7 @@ using Xunit;
 using Part.VideoUploader.Domain;
 using Part.VideoUploader.Service.Contracts.Infrastructure;
 using Part.VideoUploader.Service.Features.UploadQueue;
+using Part.VideoUploader.Service.Features.UploadQueue.Command;
 
 
 namespace Part.VideoUploader.Test.UnitTests;
