@@ -17,8 +17,7 @@ public class EnqueueCommandHandlerTest
         {
             Id = Guid.NewGuid(),
             Name = "videoName",
-            Path = "videoPath",
-            Type = "mp4",
+            Extension = "mp4",
             DateCreated = DateTime.Now
         };
 
