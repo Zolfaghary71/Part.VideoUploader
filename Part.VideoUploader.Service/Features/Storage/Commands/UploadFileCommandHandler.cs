@@ -1,30 +1,51 @@
 ﻿using MediatR;
+using Part.VideoUploader.Domain;
 using Part.VideoUploader.Service.Contracts.Infrastructure;
-using Microsoft.Extensions.Logging;
+using Part.VideoUploader.Service.Responses;
+
 namespace Part.VideoUploader.Service.Features.Storage.Commands;
 
-public class UploadFileCommandHandler: IRequestHandler<UploadFileCommand, UploadFileCommandResponse>
+public class UploadFileCommandHandler : IRequestHandler<UploadFileCommand, BaseResponse>
 {
-    public IStorageService _storageService { get; set; }
-    public ILogger _logger { get; set; }
+    private readonly IStorageService _storageService;
+    private readonly IFileUploadInfoRepository _fileUploadInfoRepository;
 
-    public UploadFileCommandHandler(IStorageService storageService, ILogger logger)
+    public UploadFileCommandHandler(IStorageService storageService, IFileUploadInfoRepository fileUploadInfoRepository)
     {
         _storageService = storageService;
-        _logger = logger;
+        _fileUploadInfoRepository = fileUploadInfoRepository;
     }
 
-    public async Task<UploadFileCommandResponse> Handle(UploadFileCommand request, CancellationToken cancellationToken)
+    public async Task<BaseResponse> Handle(UploadFileCommand request, CancellationToken cancellationToken)
     {
+        var uploadId = Guid.NewGuid();
+        var uploadInfo = new FileUploadInfo
+        {
+            Id = uploadId,
+            FileName = request.FileName,
+            UserId = request.UserId,
+            Size = request.FileStream.Length,
+            UploadStartTime = DateTime.UtcNow,
+            Status = "Uploading"
+        };
+
+        await _fileUploadInfoRepository.AddAsync(uploadInfo);
+
         try
         {
-           await _storageService.UploadAsync(request.BucketName, request.NameAfterUpload, request.FilePath, request.FileName);
-           return new UploadFileCommandResponse("Upload Success");
+            await _storageService.UploadAsync("defaultbucket", request.FileName, request.FileStream, request.ContentType);
+            uploadInfo.Status = "Completed";
+            uploadInfo.UploadEndTime = DateTime.UtcNow;
         }
-        catch (Exception e)
+        catch (Exception ex)
         {
-            _logger.LogError("Failed to upload The File,InternalError. {0}",e.Message);
-            return new UploadFileCommandResponse("Failed to upload The File,InternalError",false);
+            uploadInfo.Status = "Failed";
+            await _fileUploadInfoRepository.UpdateAsync(uploadInfo);
+            return new BaseResponse("chunk Failed",false);
         }
+
+        await _fileUploadInfoRepository.UpdateAsync(uploadInfo);
+
+        return new BaseResponse("chunk received",true);
     }
 }

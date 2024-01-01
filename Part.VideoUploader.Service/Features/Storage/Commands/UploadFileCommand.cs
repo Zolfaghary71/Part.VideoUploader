@@ -1,8 +1,9 @@
 ﻿using MediatR;
+using Part.VideoUploader.Service.Responses;
 
-namespace Part.VideoUploader.Service.Features.Upload.Commands;
+namespace Part.VideoUploader.Service.Features.Storage.Commands;
 
-public class UploadFileCommand : IRequest<Guid>
+public class UploadFileCommand : IRequest<BaseResponse>
 {
     public Stream FileStream { get; }
     public string FileName { get; }

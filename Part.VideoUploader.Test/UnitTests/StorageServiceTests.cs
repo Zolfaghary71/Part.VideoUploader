@@ -8,7 +8,7 @@ using Xunit;
 
 namespace Part.VideoUploader.Test.UnitTests;
 
-public class UploadFileCommandHandlerTest
+public class StorageServiceTests
 {
     [Fact]
     public async Task SaveToStorage()
