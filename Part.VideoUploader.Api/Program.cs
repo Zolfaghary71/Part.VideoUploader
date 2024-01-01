@@ -37,15 +37,6 @@ builder.Services.AddStackExchangeRedisCache(options =>
     options.InstanceName = "SampleInstance";
 });
 
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("AllowAll", builder =>
-    {
-        builder.AllowAnyOrigin()
-               .AllowAnyMethod()
-               .AllowAnyHeader();
-    });
-});
 
 builder.Services.AddControllers();
 
@@ -63,7 +54,7 @@ app.UseSwaggerUI(c =>
     c.RoutePrefix = string.Empty;
 });
 
-app.UseCors("AllowAll");
+app.UseCors();
 
 app.UseRouting();
 
