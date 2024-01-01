@@ -1,23 +1,25 @@
-﻿using Part.VideoUploader.Infrastructure.Storage;
+﻿using Microsoft.Extensions.Configuration;
+using Part.VideoUploader.Infrastructure.Storage;
 using Xunit;
 
 namespace Part.VideoUploader.Test.IntegrationTest;
+
 
 public class MinIoTests
 {
     [Fact]
     public async void SaveToMinIo()
     {
-        string minioEndpoint = "YourMinioEndpoint";
-        string accessKey = "YourAccessKey";
-        string secretKey = "YourSecretKey";
-        string bucketName = "defaultbucket"; 
-        var service = new StorageService(minioEndpoint, accessKey, secretKey, bucketName);
+        var configuration = new ConfigurationBuilder()
+            .AddJsonFile("appsettings.json") 
+            .Build();
+
+        var service = new StorageService(configuration);
 
         string testFilePath = "path/to/local/testvideo.mp4"; 
         string objectName = "testvideo.mp4";
+        using var fileStream = File.OpenRead(testFilePath); 
 
-        await service.UploadAsync(bucketName, objectName, testFilePath,objectName);
-
+        await service.UploadAsync("defaultbucket", objectName, fileStream, "video/mp4");
     }
 }

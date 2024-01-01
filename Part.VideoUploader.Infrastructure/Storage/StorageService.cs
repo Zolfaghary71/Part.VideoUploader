@@ -1,4 +1,5 @@
-﻿using Part.VideoUploader.Service.Contracts.Infrastructure;
+﻿using Microsoft.Extensions.Configuration;
+using Part.VideoUploader.Service.Contracts.Infrastructure;
 using Minio;
 
 using Minio.DataModel.Args;
@@ -12,13 +13,18 @@ namespace Part.VideoUploader.Infrastructure.Storage
         private readonly IMinioClient _minioClient;
         private readonly string _bucketName;
 
-        public StorageService(string endpoint, string accessKey, string secretKey, string bucketName)
+
+        public StorageService(IConfiguration configuration)
         {
+            var endpoint = configuration["Minio:Endpoint"];
+            var accessKey = configuration["Minio:AccessKey"];
+            var secretKey = configuration["Minio:SecretKey"];
+            _bucketName = configuration["Minio:BucketName"];
+
             _minioClient = new MinioClient()
                 .WithEndpoint(endpoint)
                 .WithCredentials(accessKey, secretKey)
                 .Build();
-            _bucketName = bucketName;
         }
 
         public async Task UploadAsync(string bucketName, string objectName, Stream dataStream, string contentType)
