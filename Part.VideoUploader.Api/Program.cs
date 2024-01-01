@@ -15,7 +15,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddScoped<IFileUploadInfoRepository, FileUploadInfoRepository>();
-
+builder.Services.AddTransient<IStorageService, StorageService>();
 
 builder.Services.AddSwaggerGen(c =>
 {
@@ -37,8 +37,38 @@ builder.Services.AddStackExchangeRedisCache(options =>
     options.InstanceName = "SampleInstance";
 });
 
-builder.Services.AddTransient<IStorageService, StorageService>();
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll", builder =>
+    {
+        builder.AllowAnyOrigin()
+               .AllowAnyMethod()
+               .AllowAnyHeader();
+    });
+});
+
+builder.Services.AddControllers();
 
 var app = builder.Build();
+
+if (!app.Environment.IsDevelopment())
+{
+    app.UseExceptionHandler("/error"); 
+}
+
+app.UseSwagger();
+app.UseSwaggerUI(c =>
+{
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+    c.RoutePrefix = string.Empty;
+});
+
+app.UseCors("AllowAll");
+
+app.UseRouting();
+
+app.UseAuthorization();
+
+app.MapControllers();
 
 app.Run();
