@@ -21,6 +21,7 @@
 
     <ItemGroup>
       <Folder Include="Events\" />
+      <Folder Include="Features\Upload\Commands\" />
     </ItemGroup>
 
 </Project>
