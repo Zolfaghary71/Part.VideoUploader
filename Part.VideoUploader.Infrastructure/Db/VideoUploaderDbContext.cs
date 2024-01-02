@@ -4,9 +4,9 @@ namespace Part.VideoUploader.Infrastructure.Db;
 
 using Microsoft.EntityFrameworkCore;
 
-public class ApplicationDbContext : DbContext
+public class VideoUploaderDbContext : DbContext
 {
-    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
+    public VideoUploaderDbContext(DbContextOptions<VideoUploaderDbContext> options)
         : base(options)
     {
     }

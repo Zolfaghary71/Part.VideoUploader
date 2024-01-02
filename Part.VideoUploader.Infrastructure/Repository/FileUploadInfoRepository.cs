@@ -8,9 +8,9 @@ namespace Part.VideoUploader.Infrastructure.Repository;
 
 public class FileUploadInfoRepository : IFileUploadInfoRepository
 {
-    private readonly ApplicationDbContext _context;
+    private readonly VideoUploaderDbContext _context;
 
-    public FileUploadInfoRepository(ApplicationDbContext context)
+    public FileUploadInfoRepository(VideoUploaderDbContext context)
     {
         _context = context;
     }

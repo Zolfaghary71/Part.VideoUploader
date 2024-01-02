@@ -14,7 +14,7 @@ builder.Services.AddMediatR(cfg =>
 {
     cfg.RegisterServicesFromAssemblies(typeof(Program).Assembly, typeof(UploadFileCommandHandler).Assembly);
 });
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
+builder.Services.AddDbContext<VideoUploaderDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddScoped<IFileUploadInfoRepository, FileUploadInfoRepository>();
