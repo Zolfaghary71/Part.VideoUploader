@@ -22,7 +22,7 @@ public class UploadFileCommandHandler : IRequestHandler<UploadFileCommand, BaseR
         var uploadInfo = new FileUploadInfo
         {
             Id = uploadId,
-            FileName = request.FileName,
+            FileName = request.FileName+request.UserId+DateTime.Now,
             UserId = request.UserId,
             Size = request.FileStream.Length,
             UploadStartTime = DateTime.UtcNow,

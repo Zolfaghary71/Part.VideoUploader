@@ -1,5 +1,6 @@
 ﻿using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc;
+using Part.VideoUploader.Service.Features.FileInfo;
 using Part.VideoUploader.Service.Features.Storage.Commands;
 using Part.VideoUploader.Service.Responses;
 using IMediator = MediatR.IMediator;
@@ -48,5 +49,13 @@ public class FileUploadController : ControllerBase
         {
             return StatusCode(500, $"An error occurred while uploading the file: {ex.Message}");
         }
+    }
+
+    [HttpGet("GetUserFiles")]
+    public async Task<ActionResult<GetFileInfoResponse>> GetFileNames()
+    {
+        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        var res = await _mediator.Send(new GetFileInfoQuery() { Id = userId });
+        return res;
     }
 }
