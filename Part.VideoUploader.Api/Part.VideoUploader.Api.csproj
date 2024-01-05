@@ -13,4 +13,8 @@
       </Content>
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\Part.VideoUploader.Infrastructure\Part.VideoUploader.Infrastructure.csproj" />
+    </ItemGroup>
+
 </Project>
