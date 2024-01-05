@@ -1,5 +1,3 @@
-using System.Reflection;
-using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using Part.VideoUploader.Infrastructure.Db;
@@ -16,6 +14,9 @@ builder.Services.AddMediatR(cfg =>
 });
 builder.Services.AddDbContext<VideoUploaderDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+builder.Services.AddDbContext<VideoUploaderDbContext>(options =>
+    options.UseInMemoryDatabase("InMemoryPartVideoUploaderDb"));
 
 builder.Services.AddScoped<IFileUploadInfoRepository, FileUploadInfoRepository>();
 builder.Services.AddScoped<IStorageService, StorageService>();
