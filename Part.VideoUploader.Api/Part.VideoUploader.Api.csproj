@@ -7,14 +7,18 @@
         <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     </PropertyGroup>
 
+
+
+    <ItemGroup>
+      <ProjectReference Include="..\Part.VideoUploader.Infrastructure\Part.VideoUploader.Infrastructure.csproj" />
+    </ItemGroup>
+
+
+
     <ItemGroup>
       <Content Include="..\.dockerignore">
         <Link>.dockerignore</Link>
       </Content>
-    </ItemGroup>
-
-    <ItemGroup>
-      <ProjectReference Include="..\Part.VideoUploader.Infrastructure\Part.VideoUploader.Infrastructure.csproj" />
     </ItemGroup>
 
 </Project>
